@@ -166,3 +166,12 @@ PostgreSQL uses 64-bit timestamps — no Year 2038 bug. Can represent time from 
 | Floats     | `REAL`, `DOUBLE` | For approximate scientific data |
 | Money      | `NUMERIC(p,s)`   | Always use for currency         |
 | Dates      | `TIMESTAMP`      | Most versatile date-time type   |
+
+# Setup of the database
+
+The connection was added succesfully and Data was inserted successfully.
+
+![](img/01-01-setup.png)
+
+The first (and easy) part was completed
+![](img/99-01-score.png)
