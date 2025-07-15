@@ -89,8 +89,80 @@ SELECT  COUNT(*) FROM tablename;
 SELECT  COUNT(*) FROM users;
 ```
 
-# Summary
+## Summary
 
 - SQL is not procedural: no loops or if statements, but commands behave like loops internally.
 - SQL is an abstraction: You don’t need to know how the data is physically accessed.
 - It was designed to be simple and powerful
+
+# PostgreSQL Data Types
+
+This document summarizes key concepts about PostgreSQL data types including text, numeric, binary, and date/time types — with design guidance and performance tips.
+
+## Character Data Types
+
+| Type         | Description                                         | Use When...                                          |
+| ------------ | --------------------------------------------------- | ---------------------------------------------------- |
+| `VARCHAR(n)` | Variable-length string (up to `n` characters)       | You want length limits but don’t know the exact size |
+| `CHAR(n)`    | Fixed-length string (always exactly `n` characters) | You always store fixed-size data (e.g. SHA256 hash)  |
+| `TEXT`       | Unlimited-length string                             | For large bodies of text (e.g. comments, blogs)      |
+
+Avoid using `TEXT` in `WHERE`, `ORDER BY`, or indexes — use `VARCHAR` instead.
+
+## Character Sets (Encoding)
+
+- All string types support UTF-8 (multi-language/Unicode).
+- Important for sorting, comparisons, and non-English input.
+- Sorting rules depend on the character set (locale-aware).
+
+## Binary Data
+
+| Type    | Description                      | Use Case                    |
+| ------- | -------------------------------- | --------------------------- |
+| `BYTEA` | Stores binary data (byte arrays) | Images, files, or raw blobs |
+
+Not suitable for text or searching. Can’t use character set–based operations.
+
+## Numeric Types
+
+| Type               | Size      | Description                            | Use When...                     |
+| ------------------ | --------- | -------------------------------------- | ------------------------------- |
+| `SMALLINT`         | 16-bit    | -32K to 32K                            | Space-saving for tiny numbers   |
+| `INTEGER` / `INT`  | 32-bit    | ±2 billion                             | Default for IDs and counts      |
+| `BIGINT`           | 64-bit    | Very large numbers                     | For huge counters or timestamps |
+| `REAL`             | 32-bit FP | ~7 digits accuracy (approximate float) | Weather, sensor data            |
+| `DOUBLE PRECISION` | 64-bit FP | ~15 digits accuracy (scientific float) | Simulations, calculations       |
+| `NUMERIC(p,s)`     | Arbitrary | Exact decimal precision                | Use this for money and currency |
+
+`NUMERIC(14,2)` = 14 digits total, 2 after the decimal point.
+
+## Date & Time Types
+
+| Type        | Description                   | Use Case                 |
+| ----------- | ----------------------------- | ------------------------ |
+| `DATE`      | Calendar date only            | Birthdays, deadlines     |
+| `TIME`      | Time of day only              | Appointments             |
+| `TIMESTAMP` | Date + time (64-bit, precise) | Most general-purpose use |
+
+PostgreSQL uses 64-bit timestamps — no Year 2038 bug. Can represent time from 4713 BC to 294276 AD.
+
+## Design Tips
+
+- Use `VARCHAR` unless you’re absolutely sure the length is fixed → then use `CHAR(n)`.
+- Use `TEXT` for unbounded user content (blog posts, comments).
+- Don’t use `REAL` or `DOUBLE` for money — use `NUMERIC(p,s)` instead.
+- Avoid indexing or filtering on `TEXT` or `BYTEA` without special consideration.
+- Use UTF-8 to support multilingual input.
+
+## Quick Reference Table
+
+| Category   | PostgreSQL Type  | Notes                           |
+| ---------- | ---------------- | ------------------------------- |
+| Text       | `VARCHAR(n)`     | Most flexible string type       |
+| Fixed Text | `CHAR(n)`        | Best for fixed-size hashes/IDs  |
+| Long Text  | `TEXT`           | Avoid for indexing              |
+| Binary     | `BYTEA`          | Use for blobs, images           |
+| Integers   | `INT`, `BIGINT`  | Default for IDs/counts          |
+| Floats     | `REAL`, `DOUBLE` | For approximate scientific data |
+| Money      | `NUMERIC(p,s)`   | Always use for currency         |
+| Dates      | `TIMESTAMP`      | Most versatile date-time type   |
