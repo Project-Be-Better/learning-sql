@@ -1,7 +1,3 @@
-Certainly! Here's your cleaned SQL notes (Markdown-formatted, no dividers or emojis), ready to paste into GitHub or OneNote:
-
----
-
 # SQL Notes: Keys, Joins, and Relationships
 
 ## Database Keys
@@ -25,15 +21,11 @@ Certainly! Here's your cleaned SQL notes (Markdown-formatted, no dividers or emo
 - A foreign key is a column containing a key that points to the primary key of another table.
 - When all primary keys are integers, then all foreign keys should be integers. This is very good for performance.
 
----
-
 ## Normal Forms
 
 - 1NF
 - 2NF
 - 3NF
-
----
 
 ## Creating the Music Database
 
@@ -52,8 +44,6 @@ We designed a normalized model with four main tables:
 | UNIQUE on logical key    | (add `UNIQUE` constraint on a logical field like `name`)    | Ensures natural keys remain unique                              |
 | FOREIGN KEY + REFERENCES | `artist_id INTEGER REFERENCES artist(id)`                   | Column refers to a PK in another table                          |
 | ON DELETE CASCADE        | `artist_id INTEGER REFERENCES artist(id) ON DELETE CASCADE` | Deleting an artist will delete all related albums automatically |
-
----
 
 ## Using JOIN Across Tables
 
@@ -77,8 +67,6 @@ JOIN artist ON album.artist_id = artist.id
 JOIN genre ON track.genre_id = genre.id;
 ```
 
----
-
 ## Many-to-Many Relationships
 
 In the real world:
@@ -97,8 +85,6 @@ A separate table that:
 - Models the relationship between them
 - May contain extra data (e.g., user's role in a course)
 
----
-
 ## Hash Index vs BTREE
 
 **Question:** Which index is best for exact match lookup but not good for prefix or sorting?
@@ -109,8 +95,6 @@ A separate table that:
 | ---------- | ------------------- | ----------------------------- |
 | HASH       | Fast exact match    | Not good for sorting or range |
 | BTREE      | Match, sort, ranges | Slightly slower for exact     |
-
----
 
 ## SQL Exercise Snippets
 
@@ -150,8 +134,6 @@ FROM model
 JOIN make ON model.make_id = make.id
 ORDER BY make.name LIMIT 5;
 ```
-
----
 
 ### DROP TABLE with CASCADE
 
